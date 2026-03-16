@@ -38,6 +38,15 @@ anchors:
 
 Deterministic normalization layer that converts governed domain artifacts into canonical CRI-CORE proposal objects.
 
+## Installation
+
+Install from PyPI:
+```
+pip install cricore-proposal-normalizer
+```
+
+Requires Python 3.10+.
+
 ## Purpose
 
 Real workflows produce domain artifacts such as:
