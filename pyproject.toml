@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=65.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cricore-proposal-normalizer"
+version = "0.1.0"
+description = "Deterministic normalization layer that converts governed artifacts into canonical CRI-CORE proposal objects."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+
+authors = [
+  { name = "Shawn C. Wright", email = "swright@waveframelabs.org" }
+]
+
+keywords = [
+  "governance",
+  "workflow",
+  "ai-governance",
+  "mutation",
+  "normalization",
+  "cricore"
+]
+
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent"
+]
+
+dependencies = []
+
+[project.urls]
+Homepage = "https://waveframelabs.org"
+Repository = "https://github.com/Waveframe-Labs/proposal-normalizer"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["proposal_normalizer*"]
