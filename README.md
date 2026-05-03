@@ -1,13 +1,13 @@
 ---
-title: "Proposal Normalizer — Canonical Proposal Assembly Layer"
+title: "Proposal Normalizer - Canonical Proposal Assembly Layer"
 filetype: "documentation"
 type: "repository-overview"
 domain: "governance-integration"
-version: "0.1.0"
+version: "0.2.0"
 doi: "TBD"
 status: "Active"
 created: "2026-03-16"
-updated: "2026-03-16"
+updated: "2026-05-03"
 
 author:
   name: "Shawn C. Wright"
@@ -27,21 +27,24 @@ copyright:
 ai_assisted: "partial"
 
 dependencies:
-  - "https://waveframelabs.org/schemas/cricore-proposal-0.1.0.json"
+  - "https://waveframelabs.org/schemas/cricore-proposal-0.2.0.json"
 
 anchors:
-  - "Proposal-Normalizer-v0.1.0"
+  - "Proposal-Normalizer-v0.2.0"
   - "Canonical-Proposal-Assembly-Layer"
 ---
 
 # Proposal Normalizer
 
-Deterministic normalization layer that converts governed domain artifacts into canonical CRI-CORE proposal objects.
+Strict proposal assembly layer for canonical CRI-CORE proposal objects.
+
+The normalizer binds caller-supplied proposal references into one envelope. It validates boundary shape, computes artifact file hashes, and preserves governance truth supplied by upstream systems.
 
 ## Installation
 
 Install from PyPI:
-```
+
+```bash
 pip install cricore-proposal-normalizer
 ```
 
@@ -49,57 +52,119 @@ Requires Python 3.10+.
 
 ## Purpose
 
-Real workflows produce domain artifacts such as:
+Real workflows produce:
 
-- claims
-- approvals
-- decisions
-- datasets
+- artifact files
+- actor identity declarations
+- mutation requests
+- compiled contract references
 
 CRI-CORE evaluates only a single canonical structure:
-```
+
+```text
 canonical proposal object
 ```
 
 The proposal normalizer bridges this boundary.
 
-artifact
-↓
-mutation reference
-↓
-proposal normalizer
-↓
-canonical proposal object
-↓
-CRI-CORE enforcement
-
+```text
+artifacts + actor + mutation + contract
+  -> proposal normalizer
+  -> canonical proposal object
+  -> CRI-CORE enforcement
+```
 
 ## Responsibilities
 
-The normalizer performs four deterministic operations:
+The normalizer performs strict, deterministic binding:
 
 1. **Artifact Binding**
 
-   Computes artifact references and SHA256 hashes.
+   Verifies each supplied artifact path exists and records its SHA256 hash.
 
 2. **Mutation Binding**
 
-   Attaches the governed mutation request.
+   Requires exactly the mutation boundary shape used by CRI-CORE:
+
+   ```python
+   {
+       "domain": str,
+       "resource": str,
+       "action": str,
+   }
+   ```
 
 3. **Contract Binding**
 
-   Attaches the compiled governance contract identifier and hash.
+   Requires a caller-supplied contract reference and preserves it without computing, coercing, or inferring contract truth:
 
-4. **Proposal Assembly**
+   ```python
+   {
+       "id": "...",
+       "version": "...",
+       "hash": "...",
+   }
+   ```
 
-   Produces a canonical proposal object that conforms to the CRI-CORE proposal schema.
+4. **Actor Binding**
+
+   Requires explicit actor identity, type, and role:
+
+   ```python
+   {
+       "id": str,
+       "type": str,
+       "role": str,
+   }
+   ```
+
+5. **Proposal Assembly**
+
+   Produces a canonical proposal object with no mutation after construction.
+
+## Proposal Shape
+
+```python
+{
+    "proposal_id": str,
+    "timestamp": str,
+    "actor": {
+        "id": str,
+        "type": str,
+        "role": str,
+    },
+    "contract": {
+        "id": "...",
+        "version": "...",
+        "hash": "...",
+    },
+    "requested_mutation": {
+        "domain": str,
+        "resource": str,
+        "action": str,
+    },
+    "artifacts": [
+        {
+            "path": str,
+            "sha256": str,
+        }
+    ],
+}
+```
+
+When supplied, `run_context` is copied into the proposal envelope.
 
 ## Design Constraints
 
-The normalizer intentionally remains minimal.
+The normalizer is strict, not forgiving. Missing required contract, mutation, or actor fields raise `ValueError`.
 
 It does **not**:
 
+- compute contract hashes
+- infer contract identifiers or versions
+- infer actor roles
+- inject defaults
+- accept optional mutation ambiguity
 - interpret governance policy
 - enforce lifecycle rules
 - perform approvals
@@ -109,8 +174,8 @@ Those responsibilities belong to **CRI-CORE**.
 
 ## Output
 
-The normalizer produces a deterministic proposal envelope suitable for evaluation by the CRI-CORE enforcement pipeline.
+The normalizer produces a canonical proposal envelope suitable for evaluation by the CRI-CORE enforcement pipeline.
 
 <div align="center">
-  <sub>© 2026 Waveframe Labs — Independent Open-Science Research Entity</sub>
+  <sub>Copyright 2026 Waveframe Labs - Independent Open-Science Research Entity</sub>
 </div>

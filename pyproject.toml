@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cricore-proposal-normalizer"
-version = "0.1.0"
-description = "Deterministic normalization layer that converts governed artifacts into canonical CRI-CORE proposal objects."
+version = "0.2.0"
+description = "Strict proposal assembly layer for canonical CRI-CORE proposal objects."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Apache-2.0" }
