@@ -47,6 +47,31 @@ from .mutation_binding import bind_mutation
 from .contract_binding import bind_contract
 
 
+REQUIRED_ACTOR_FIELDS = [
+    "id",
+    "type",
+    "role",
+]
+
+
+def _bind_actor(actor: Mapping[str, Any]) -> Dict[str, str]:
+    missing = [field for field in REQUIRED_ACTOR_FIELDS if field not in actor]
+    if missing:
+        raise ValueError(f"Actor missing required fields: {missing}")
+
+    bound_actor = {
+        "id": actor["id"],
+        "type": actor["type"],
+        "role": actor["role"],
+    }
+
+    non_string = [field for field, value in bound_actor.items() if not isinstance(value, str)]
+    if non_string:
+        raise ValueError(f"Actor fields must be strings: {non_string}")
+
+    return bound_actor
+
+
 def build_proposal(
     *,
     proposal_id: str,
@@ -59,12 +84,14 @@ def build_proposal(
     """
     Assemble a canonical CRI-CORE proposal object.
 
-    This function converts domain artifacts and mutation references
-    into the canonical proposal envelope expected by the CRI-CORE
-    enforcement pipeline.
+    This function binds caller-supplied proposal references into the
+    canonical proposal envelope expected by the CRI-CORE enforcement
+    pipeline.
     """
 
     timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    bound_actor = _bind_actor(actor)
 
     artifacts = bind_artifacts(artifact_paths)
 
@@ -75,13 +102,11 @@ def build_proposal(
     proposal: Dict[str, Any] = {
         "proposal_id": proposal_id,
         "timestamp": timestamp,
-        "actor": dict(actor),
+        "actor": bound_actor,
         "contract": contract_binding,
         "requested_mutation": requested_mutation,
         "artifacts": artifacts,
+        **({"run_context": dict(run_context)} if run_context is not None else {}),
     }
-
-    if run_context is not None:
-        proposal["run_context"] = dict(run_context)
 
     return proposal

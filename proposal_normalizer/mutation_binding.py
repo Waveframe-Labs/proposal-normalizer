@@ -44,30 +44,27 @@ REQUIRED_MUTATION_FIELDS = {
 }
 
 
-def bind_mutation(mutation: Mapping[str, Any]) -> Dict[str, Any]:
+def bind_mutation(mutation: Mapping[str, Any]) -> Dict[str, str]:
     """
-    Normalize the requested mutation object for proposal assembly.
+    Bind the requested mutation object for proposal assembly.
 
-    This function validates minimal structural requirements and
-    produces a canonical mutation reference suitable for the
-    CRI-CORE proposal schema.
+    The mutation shape is intentionally strict: domain, resource, and
+    action are the complete boundary contract.
     """
 
-    missing = REQUIRED_MUTATION_FIELDS - mutation.keys()
+    missing = [field for field in REQUIRED_MUTATION_FIELDS if field not in mutation]
 
     if missing:
-        raise ValueError(
-            f"Mutation object missing required fields: {sorted(missing)}"
-        )
+        raise ValueError("Mutation must include domain, resource, and action")
 
-    normalized: Dict[str, Any] = {
+    normalized: Dict[str, str] = {
         "domain": mutation["domain"],
         "resource": mutation["resource"],
         "action": mutation["action"],
     }
 
-    # optional lifecycle stage reference
-    if "stage" in mutation:
-        normalized["stage"] = mutation["stage"]
+    non_string = [field for field, value in normalized.items() if not isinstance(value, str)]
+    if non_string:
+        raise ValueError(f"Mutation fields must be strings: {non_string}")
 
     return normalized

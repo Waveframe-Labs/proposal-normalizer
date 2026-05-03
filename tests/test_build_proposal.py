@@ -45,7 +45,6 @@ def test_build_proposal_structure(tmp_path: Path):
         "domain": "claim-lifecycle",
         "resource": "claim",
         "action": "transition",
-        "stage": "proposed",
     }
 
     contract = {
@@ -57,7 +56,7 @@ def test_build_proposal_structure(tmp_path: Path):
     actor = {
         "id": "workflow",
         "type": "workflow",
-        "declared_role": "proposer",
+        "role": "proposer",
     }
 
     proposal = build_proposal(

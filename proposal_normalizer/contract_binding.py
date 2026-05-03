@@ -44,25 +44,18 @@ REQUIRED_CONTRACT_FIELDS = {
 }
 
 
-def bind_contract(contract: Mapping[str, Any]) -> Dict[str, str]:
+def bind_contract(contract: Mapping[str, Any]) -> Dict[str, Any]:
     """
-    Normalize the contract reference for proposal assembly.
+    Bind the contract reference for proposal assembly.
 
-    Ensures that proposals are deterministically bound to a
-    specific compiled governance contract artifact.
+    The normalizer validates that the caller supplied a complete
+    contract reference. It does not compute, infer, or coerce contract
+    truth.
     """
 
-    missing = REQUIRED_CONTRACT_FIELDS - contract.keys()
+    missing = [field for field in REQUIRED_CONTRACT_FIELDS if field not in contract]
 
     if missing:
-        raise ValueError(
-            f"Contract object missing required fields: {sorted(missing)}"
-        )
+        raise ValueError(f"Contract missing required fields: {missing}")
 
-    normalized: Dict[str, str] = {
-        "id": str(contract["id"]),
-        "version": str(contract["version"]),
-        "hash": str(contract["hash"]),
-    }
-
-    return normalized
+    return dict(contract)
