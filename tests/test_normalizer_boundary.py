@@ -59,3 +59,47 @@ def test_missing_contract_hash_fails(tmp_path: Path):
             },
             contract=contract,
         )
+
+
+def test_mutation_missing_field_fails():
+    with pytest.raises(ValueError):
+        build_proposal(
+            proposal_id="1",
+            actor={
+                "id": "u1",
+                "type": "human",
+                "role": "manager",
+            },
+            artifact_paths=[],
+            mutation={
+                "domain": "test",
+                "resource": "file",
+            },
+            contract={
+                "id": "c1",
+                "version": "1.0.0",
+                "hash": "abc",
+            },
+        )
+
+
+def test_actor_missing_role_fails():
+    with pytest.raises(ValueError):
+        build_proposal(
+            proposal_id="1",
+            actor={
+                "id": "u1",
+                "type": "human",
+            },
+            artifact_paths=[],
+            mutation={
+                "domain": "test",
+                "resource": "file",
+                "action": "update",
+            },
+            contract={
+                "id": "c1",
+                "version": "1.0.0",
+                "hash": "abc",
+            },
+        )
