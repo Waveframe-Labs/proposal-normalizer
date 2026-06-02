@@ -1,38 +1,3 @@
----
-title: "Proposal Normalizer - Canonical Proposal Assembly Layer"
-filetype: "documentation"
-type: "repository-overview"
-domain: "governance-integration"
-version: "0.2.0"
-doi: "TBD"
-status: "Active"
-created: "2026-03-16"
-updated: "2026-05-03"
-
-author:
-  name: "Shawn C. Wright"
-  email: "swright@waveframelabs.org"
-  orcid: "https://orcid.org/0009-0006-6043-9295"
-
-maintainer:
-  name: "Waveframe Labs"
-  url: "https://waveframelabs.org"
-
-license: "Apache-2.0"
-
-copyright:
-  holder: "Waveframe Labs"
-  year: "2026"
-
-ai_assisted: "partial"
-
-dependencies:
-  - "https://waveframelabs.org/schemas/cricore-proposal-0.2.0.json"
-
-anchors:
-  - "Proposal-Normalizer-v0.2.0"
-  - "Canonical-Proposal-Assembly-Layer"
----
 <p align="center">
   <img src="https://raw.githubusercontent.com/Waveframe-Labs/.github/main/assets/branding/canon_wf_logo_extended.png" width="700">
 </p>
