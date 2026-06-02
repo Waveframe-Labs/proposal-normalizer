@@ -33,6 +33,9 @@ anchors:
   - "Proposal-Normalizer-v0.2.0"
   - "Canonical-Proposal-Assembly-Layer"
 ---
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Waveframe-Labs/.github/main/assets/branding/canon_wf_logo_extended.png" width="700">
+</p>
 
 # Proposal Normalizer
 
